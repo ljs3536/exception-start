@@ -208,4 +208,27 @@ API를 요청했는데, 정상의 경우 API로 JSON 형식으로 데이터가 �
 
 문제를 해결하려면 오류 페이지 컨트롤러도 JSON 응답을 할 수 있도록 수정해야 한다.
 
+# /25-01-27
+
+## API 예외처리 - 스프링 부트 기본 오류 처리 
+
+스프링 부트가 제공하는 BasicErrorController 코드를 보자
+
+### BasicErrorController 코드
+- errorHtml() : produces = MediaType.TEXT_HTML_VALUE : 클라이언트 요청의 Accept 헤더 같이 text/html인 경우에는 errorHtml()을 호출해서 view를 제공한다.
+- error() : 그 외 경우에 호출되고, ResponseEntity로 HTTP Body에 JSON 데이터를 반환한다.
+
+### 스프링 부트의 예외처리
+스프링 부트의 기본 설정은 오류 발생 시 /error를 오류 페이지로 요청한다. 
+BasicErrorController는 이 경로를 기본으로 받는다. (server.error.path로 수정 가능. 기본경로 /error)
+
+### HTML페이지 vs API오류
+BasicErrorController를 확장하면 JSON 메시지도 변경할 수 있다.
+스프링 부트가 제공하는 BasicErrorController는 HTML 페이지를 제공하는 경우에는 매우 편리하다.
+그런데 API 오류 처리는 다른 차원의 이야기이다. 
+API 마다, 각각의 컨트롤러나 예외마다 서로 다른 응답 결과를 출력해야 할 수도 있다.
+예를 들어서 회원과 관련된 API에서 예외가 발생할 때 응답과, 상품과 관련된 API에서 발생하는 예외에 따라 그 결과가 달라질 수 있다.
+결과적으로 매우 세밀하고 복잡하다. 
+따라서 이 방법은 HTML 화면을 처리할 때 사용하고, API 오류 처리는 뒤에서 설명할 @ExceptionHandler를 사용하자
+
 
