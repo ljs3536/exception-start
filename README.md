@@ -268,4 +268,14 @@ HandlerExceptionResolver의 반환 값에 따른 DispatcherServlet의 동작 방
   - response.getWriter().println("hello"); 처럼 HTTP응답 바디에 직접 데이터를 넣어주는 것도 가능하다.
     여기에 JSON으로 응답하면 API응답 처리를 할 수 있다.
 
+# /25-01-30
 
+## API 예외 처리 - HandlerExceptionResolver 활용
+
+### 정리
+ExceptionResolver를 사용하면 컨트롤러에서 예외가 발생해도 ExceptionResolver에서 예외를 처리해버린다.
+따라서 예외가 발생해도 서블릿 컨테이너까지 예외가 전달되지 않고, 스프링 MVC에서 예외 처리는 끝이 난다.
+결과적으로 WAS 입장에서는 정상 처리가 된 것이다. 이렇게 예외를 이곳에서 모두 처리할 수 있다는 것이 핵심이다.
+
+서블릿 컨테이너까지 예외가 올라가면 복잡하고 지저분하게 추가 프로세스가 실행된다.
+반면에 ExceptionResolver를 사용하면 예외 처리가 상당히 깔끔해진다.
