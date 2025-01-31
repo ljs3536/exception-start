@@ -279,3 +279,27 @@ ExceptionResolver를 사용하면 컨트롤러에서 예외가 발생해도 Exce
 
 서블릿 컨테이너까지 예외가 올라가면 복잡하고 지저분하게 추가 프로세스가 실행된다.
 반면에 ExceptionResolver를 사용하면 예외 처리가 상당히 깔끔해진다.
+
+# /25-01-31
+
+## API 예외 처리 - 스프링이 제공하는 ExceptionResolver1
+스프링 부트가 기본으로 제공하는 ExceptionResolver는 다음과 같다.
+HandlerExceptionResolverComposite에 다음 순서로 등록
+1. ExceptionHandlerExceptionResolver
+2. ResponseStatusExceptionResolver
+3. DefaultHandlerExceptionResolver > 우선 순위가 가장 낮다.
+
+### ExceptionHandlerExceptionResolver
+@ExceptionHandler을 처리한다. API 예외 처리는 대부분 이 기능으로 해결한다.
+
+### ResponseStatusExceptionResolver
+HTTP 상태 코드를 지정해준다.
+
+### DefaultHandlerExceptionResolver
+스프링 내부 기본 예외를 처리한다.
+
+### ResponseStatusExceptionResolver
+- @ResponseStatus가 달려있는 예외
+- ResponseStatusException 예외
+
+
