@@ -326,3 +326,36 @@ API오류 응답의 경우 response에 직접 데이터를 넣어야 해서 매�
 ModelAndView를 반환해야 하는 것도 API에는 잘 맞지 않는다.
 스프링은 이 문제를 해결하기 위해 @ExceptionHandler라는 매우 혁신적인 예외 처리 기능을 제공한다.
 다음에 알아볼 ExceptionHandlerExceptionResolver이다.
+
+# /25-02-02
+
+## API 예외 처리 - @ExceptionHandler
+
+### HTML 화면 오류 vs API 오류
+웹 브라우저에 HTML 화면을 제공할 때는 오류가 발생하면 BasicErrorController를 사용하는게 편하다.
+이때는 단순히 5xx, 4xx 관련된 오류 화면을 보여주면 된다.
+BasicErrorController는 이런 메커니즘을 모두 구현해두었다.
+
+### API 예외 처리의 어려운 점
+- HandlerExceptionResolver를 떠올려 보면 ModelAndView를 반환해야 했다. 이것은 API 응답에는 필요하지 않다.
+- API응답을 위해서 HttpServletResponse에 직접 응답 데이터를 넣어주었다. 이것은 매우 불편하다.
+  스프링 컨트롤러에 비유하면 마치 과거 서블릿을 사용하던 시절로 돌아간 것 같다.
+- 특정 컨트롤러에서만 발생하는 예외를 별도로 처리하기 어렵다. 예를 들어서 회원을 처리하는 컨트롤러에서 발생하는 RuntimeException 예외와
+  상품을 관리하는 컨트롤러에서 발생하는 동일한 RuntimeException 예외를 서로 다른 방식으로 처리하고 싶다면 어떻게 해야 할까?
+
+### @ExceptionHandler
+스프링은 API 예외 처리 문제를 해결하기 위해 @ExceptionHandler라는 애노테이션을 사용하는 매우 편리한 예외 처리 기능을 제공하는데, 
+이것이 바로 ExceptionHandlerExceptionResolver이다. 스프링은 이 리졸버를 기본으로 제공하고 우선순위도 가장 높다.
+
+### @ExceptionHandler 예외 처리 방법
+@ExceptionHandler 에노테이션을 선언하고, 해당 컨트롤러에서 처리하고 싶은 예외를 지정해주면 된다.
+해당 컨트롤러에서 예외가 발생하면 이 메서드가 호출된다. 
+참고로 지정한 예외 또는 그 예외의 자식 클래스는 모두 잡을 수 있다.
+
+### 실행흐름
+- 컨트롤러를 호출한 결과 IllegalArgumentException 예외가 컨트롤러 밖으로 던져진다.
+- 예외가 발생했으므로 ExceptionResolver가 작동한다. 가장 우선순위가 높은 ExceptionHandlerExceptionResolver가 실행된다.
+- ExceptionHandlerExceptionResolver는 해당 컨트롤러에 IllegalArgumentException을 처리할 수 있는 @ExceptionHandler가 있는지 확인한다.
+- illegalExHandle()를 실행한다. @RestController이므로 illegalExHandle()에도 @ResponseBody가 적용된다. 따라서 HTTP 컨버터가 사용되고, 응답이 다음과 같은 JSON으로 반환된다.
+- @ResponseStatus(HttpStatus.BAD_REQUEST)를 지정했으므로 HTTP 상태코드 400으로 응답한다.
+
