@@ -359,3 +359,13 @@ BasicErrorController는 이런 메커니즘을 모두 구현해두었다.
 - illegalExHandle()를 실행한다. @RestController이므로 illegalExHandle()에도 @ResponseBody가 적용된다. 따라서 HTTP 컨버터가 사용되고, 응답이 다음과 같은 JSON으로 반환된다.
 - @ResponseStatus(HttpStatus.BAD_REQUEST)를 지정했으므로 HTTP 상태코드 400으로 응답한다.
 
+# /25-02-03
+
+## API 예외 처리 - @ControllerAdvice
+@ExceptionHandler를 사용해서 예외를 깔끔하게 처리할 수 있게 되었지만, 정상 코드와 예외 처리 코드가 하나의 컨트롤러에 섞여있다.
+@ControllerAdvice또는 @RestControllerAdvice를 사용하면 둘을 분리할 수 있다.
+
+### @ControllerAdvice
+- @ControllerAdvice는 대상으로 지정한 여러 컨트롤러에 @ExceptionHandler, @InitBinder기능을 부여
+- @ControllerAdvice에 대상을 지정하지 않으면 모든 컨트롤러에 적용 (글로벌 적용)
+- @RestControllerAdvice는 @ControllerAdvice와 같고, @ResponseBody가 추가되어 있따. 
